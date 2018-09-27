@@ -44,8 +44,10 @@ metropolisHastings <- function(start, iter, model, targetAcceptance = 0.234, bur
       mins <-  (iter - i) * timePerIter[1] / 60
       if(mins > 180){
         print(paste0('Iteration: ', i, '. Est. Time Remaining: ', round(mins / 60, 2), ' hours.'))
-      } else {
+      } else if(mins > 1){
         print(paste0('Iteration: ', i, '. Est. Time Remaining: ', round(mins, 2), ' minutes.'))
+      } else {
+        print(paste0('Iteration: ', i, '. Est. Time Remaining: ', ceiling(mins * 60), ' seconds.'))
       }
     }
 

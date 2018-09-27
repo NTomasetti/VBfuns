@@ -2,12 +2,12 @@
 % Please edit documentation in R/gaussianVB.R
 \name{gaussianVB}
 \alias{gaussianVB}
-\title{Reparameterised VB for a (Mixture) Gaussian distribution}
+\title{Reparameterised VB for a (Mixture) Gaussian approximation.}
 \usage{
 gaussianVB(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE,
-  RQMC = TRUE, batch = 0, maxIter = 5000, alpha = 0.01,
-  beta1 = 0.9, beta2 = 0.99, rollingWindowSize = 5,
-  threshold = 0.01, ...)
+  batch = 0, maxIter = 5000, alpha = 0.01, beta1 = 0.9,
+  beta2 = 0.99, rollingWindowSize = 5, threshold = 0.01,
+  RQMC = FALSE, ...)
 }
 \arguments{
 \item{data}{Data passed directly into model.}
@@ -22,8 +22,6 @@ gaussianVB(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE,
 
 \item{zEpsilon}{Boolean, if true simualte epsilon from a standard normal distribution. If false simulate epsilon from a uniform distribution Defaults to TRUE.}
 
-\item{RQMC}{Boolean, if true simulate epsilon from Randomised Quasi Monte Carlo based off the sobol seqence. Defaults to TRUE.}
-
 \item{batch}{Integer. If data is a matrix, calculate gradient based on batch many columns per iteration, if ncol(data) is divisible by batch. If batch = 0 use the whole data object per iteration.}
 
 \item{maxIter}{Interger. Maximum number of gradient ascent iterations. Defaults to 5000.}
@@ -37,6 +35,8 @@ gaussianVB(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE,
 \item{rollingWindowSize}{Integer. Take the mean of this many most recent iterations to assess convergence. Defaults to 5 if batch = 0, or ncol(data) / batch otherwise.}
 
 \item{threshold}{Maximum difference in mean value of ELBO before convergence is achieved. Defaults to 0.01.}
+
+\item{RQMC}{Boolean, if true simulate epsilon from Randomised Quasi Monte Carlo based off the sobol seqence. Defaults to FALSE.}
 
 \item{...}{Extra arguments passed into model}
 }

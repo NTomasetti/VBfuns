@@ -1,4 +1,4 @@
-#' Reparameterised VB for a (Mixture) Gaussian distribution
+#' Reparameterised VB for a (Mixture) Gaussian approximation.
 #'
 #' This function runs a Variational Bayes gradient ascent to find the parameters of a mixture of multivariate gaussians distrbituion
 #' q that minimises the KL divergence to the true posterior.
@@ -10,7 +10,6 @@
 #' @param dimEpsilon Integer. The dimension of the auxilliary random variable epsilon per mixture component
 #' @param S Integer. The number of Monte Carlo estimates per iteration. Defaults to 25.
 #' @param zEpsilon Boolean, if true simualte epsilon from a standard normal distribution. If false simulate epsilon from a uniform distribution Defaults to TRUE.
-#' @param RQMC Boolean, if true simulate epsilon from Randomised Quasi Monte Carlo based off the sobol seqence. Defaults to TRUE.
 #' @param batch Integer. If data is a matrix, calculate gradient based on batch many columns per iteration, if ncol(data) is divisible by batch. If batch = 0 use the whole data object per iteration.
 #' @param maxIter Interger. Maximum number of gradient ascent iterations. Defaults to 5000.
 #' @param alpha adam optimisation control parameter. Defaults to 0.01.
@@ -18,10 +17,11 @@
 #' @param beta2 adam optimisation control parameter. Defaults to 0.99.
 #' @param rollingWindowSize Integer. Take the mean of this many most recent iterations to assess convergence. Defaults to 5 if batch = 0, or ncol(data) / batch otherwise.
 #' @param threshold Maximum difference in mean value of ELBO before convergence is achieved. Defaults to 0.01.
+#' @param RQMC Boolean, if true simulate epsilon from Randomised Quasi Monte Carlo based off the sobol seqence. Defaults to FALSE.
 #' @param ... Extra arguments passed into model
 #' @export
-gaussianVB <- function(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE, RQMC = TRUE, batch = 0,
-                  maxIter = 5000, alpha = 0.01, beta1 = 0.9, beta2 = 0.99, rollingWindowSize = 5, threshold = 0.01, ...){
+gaussianVB <- function(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE, batch = 0, maxIter = 5000, 
+                       alpha = 0.01, beta1 = 0.9, beta2 = 0.99, rollingWindowSize = 5, threshold = 0.01, RQMC = FALSE,  ...){
   if(!is.matrix(lambda)){
     lambda <- matrix(lambda, ncol = 1)
   }
@@ -42,9 +42,10 @@ gaussianVB <- function(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE,
   } else if(batch > 0 & !is.matrix(data)){
     stop('batch > 0 is only available for matrix data')
   }
-
+  
   if(RQMC){
-    sobol <- sobol_points(100+S, dimEpsilon * mixtureComponents)
+    genFile <- system.file("extdata", "sobolGenfile", package = "VBfuns", mustWork = TRUE)
+    sobol <- sobolPoints(S, dimEpsilon * mixtureComponents, skip = 100, genFile)
   }
 
   diff <- threshold + 1
@@ -67,11 +68,11 @@ gaussianVB <- function(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE,
     grad <- array(0, dim = c(nrow(lambda), S, mixtureComponents))
 
     if(RQMC){
-      unif <- shuffle(sobol)[101:nrow(sobol), ]
+      unif <- shuffleRQMC(sobol)
       unif[unif < 0.001] = 0.001
       unif[unif > 0.999] = 0.999
     } else {
-      unif <- matrix(runif(S*dimEpsilon*mixtureComponents), ncol = dimEpsilon * mixtureComponents)
+      unif <- matrix(runif(S*dimEpsilon*mixtureComponents), nrow = S)
     }
 
     for(s in 1:S){

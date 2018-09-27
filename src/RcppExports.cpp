@@ -20,6 +20,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// shuffleRQMC
+arma::mat shuffleRQMC(arma::mat sobol);
+RcppExport SEXP _VBfuns_shuffleRQMC(SEXP sobolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type sobol(sobolSEXP);
+    rcpp_result_gen = Rcpp::wrap(shuffleRQMC(sobol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sobolPoints
+arma::mat sobolPoints(int N, int D, int skip, std::string fileLocation);
+RcppExport SEXP _VBfuns_sobolPoints(SEXP NSEXP, SEXP DSEXP, SEXP skipSEXP, SEXP fileLocationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type N(NSEXP);
+    Rcpp::traits::input_parameter< int >::type D(DSEXP);
+    Rcpp::traits::input_parameter< int >::type skip(skipSEXP);
+    Rcpp::traits::input_parameter< std::string >::type fileLocation(fileLocationSEXP);
+    rcpp_result_gen = Rcpp::wrap(sobolPoints(N, D, skip, fileLocation));
+    return rcpp_result_gen;
+END_RCPP
+}
 // vbetelMatrixCalculations
 Rcpp::List vbetelMatrixCalculations(arma::mat g, arma::mat hessian, arma::vec lambdaHat, arma::vec exponent, arma::cube dgdt);
 RcppExport SEXP _VBfuns_vbetelMatrixCalculations(SEXP gSEXP, SEXP hessianSEXP, SEXP lambdaHatSEXP, SEXP exponentSEXP, SEXP dgdtSEXP) {
@@ -38,6 +63,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_VBfuns_RBFKernel", (DL_FUNC) &_VBfuns_RBFKernel, 3},
+    {"_VBfuns_shuffleRQMC", (DL_FUNC) &_VBfuns_shuffleRQMC, 1},
+    {"_VBfuns_sobolPoints", (DL_FUNC) &_VBfuns_sobolPoints, 4},
     {"_VBfuns_vbetelMatrixCalculations", (DL_FUNC) &_VBfuns_vbetelMatrixCalculations, 5},
     {NULL, NULL, 0}
 };

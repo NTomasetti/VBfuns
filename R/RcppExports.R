@@ -5,6 +5,23 @@ RBFKernel <- function(y, xIn, h) {
     .Call('_VBfuns_RBFKernel', PACKAGE = 'VBfuns', y, xIn, h)
 }
 
+shuffleRQMC <- function(sobol) {
+    .Call('_VBfuns_shuffleRQMC', PACKAGE = 'VBfuns', sobol)
+}
+
+sobolPoints <- function(N, D, skip, fileLocation) {
+    .Call('_VBfuns_sobolPoints', PACKAGE = 'VBfuns', N, D, skip, fileLocation)
+}
+
+#' Returns the derivative of the log-joint distribution with respect to theta for VBETEL
+#' 
+#' Given the intermediate inputs, this function calculates the last few stages of the derivative of the logjoint with respect to theta.
+#' @param g An N x P matrix where rows correspond to the P dimensional moment condition evaluated at each of the N observations.
+#' @param hessian The P x P matrix of the hessian matrix of h(theta, lambda), usually provided by nlm(...)$hessian.
+#' @param lambdaHat A P dimensional vector of the optimal lambda values.
+#' @param exponent An N dimensional vector of exp(lambdaHat * g) evaluated at each of the N observations
+#' @param gdt A P x P x N array of the P x P matrix of the derivative of g with respect to theta, each slice corresponds to one array
+#' @export
 vbetelMatrixCalculations <- function(g, hessian, lambdaHat, exponent, dgdt) {
     .Call('_VBfuns_vbetelMatrixCalculations', PACKAGE = 'VBfuns', g, hessian, lambdaHat, exponent, dgdt)
 }
