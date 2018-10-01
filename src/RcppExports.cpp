@@ -21,13 +21,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // shuffleRQMC
-arma::mat shuffleRQMC(arma::mat sobol);
-RcppExport SEXP _VBfuns_shuffleRQMC(SEXP sobolSEXP) {
+arma::mat shuffleRQMC(arma::mat sequence);
+RcppExport SEXP _VBfuns_shuffleRQMC(SEXP sequenceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type sobol(sobolSEXP);
-    rcpp_result_gen = Rcpp::wrap(shuffleRQMC(sobol));
+    Rcpp::traits::input_parameter< arma::mat >::type sequence(sequenceSEXP);
+    rcpp_result_gen = Rcpp::wrap(shuffleRQMC(sequence));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -77,7 +77,11 @@ gaussianVB <- function(data, lambda, model, dimEpsilon, S = 25, zEpsilon = TRUE,
 
     for(s in 1:S){
       for(m in 1:mixtureComponents){
-        epsilon <- unif[s, (m-1)*dimEpsilon + 1:dimEpsilon]
+        if(S == 1){
+          epsilon <- unif[(m-1)*dimEpsilon + 1:dimEpsilon]
+        } else {
+          epsilon <- unif[s, (m-1)*dimEpsilon + 1:dimEpsilon]
+        }
         logq[s, m] <- 0
         if(zEpsilon){
           epsilon <- qnorm(epsilon)

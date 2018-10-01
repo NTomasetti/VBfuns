@@ -4,6 +4,13 @@
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
 
+//' Generate N draws from the D dimensional unit hypercube according to a Sobol Sequence
+//' 
+//' This function provides a N x D low discrepancy sequence of numbers for Quasi-Monte-Carlo
+//' @param N Number of draws
+//' @param D Dimension of draws
+//' @param skip Start draws from the skip + 1'th iteration of the Sobol Sequence
+//' @param fileLocation Location of a file containing the Sobol Sequence direction numbers
 // [[Rcpp::export]]
 arma::mat sobolPoints(int N, int D, int skip, std::string fileLocation) {
   using namespace std;
