@@ -7,32 +7,34 @@
 //' Returns the derivative of the log-joint distribution with respect to theta for VBETEL
 //' 
 //' Given the intermediate inputs, this function calculates the last few stages of the derivative of the logjoint with respect to theta.
-//' @param g An N x P matrix where rows correspond to the P dimensional moment condition evaluated at each of the N observations.
-//' @param hessian The P x P matrix of the hessian matrix of h(theta, lambda), usually provided by nlm(...)$hessian.
-//' @param lambdaHat A P dimensional vector of the optimal lambda values.
+//' @param g An N x D matrix where rows correspond to the D dimensional moment condition evaluated at each of the N observations.
+//' @param hessian The D x D matrix of the hessian matrix of h(theta, lambda), usually provided by nlm(...)$hessian.
+//' @param lambdaHat A D dimensional vector of the optimal lambda values.
 //' @param exponent An N dimensional vector of exp(lambdaHat * g) evaluated at each of the N observations
-//' @param gdt A P x P x N array of the P x P matrix of the derivative of g with respect to theta, each slice corresponds to one array
+//' @param gdt A D x P x N array of the D x P matrix of the derivative of g (D dimensional) with respect to theta (P dimensional), 
+//' each slice corresponds to the derivative matrix for one observation
 //' @export
 // [[Rcpp::export]]
 Rcpp::List vbetelMatrixCalculations(arma::mat g, arma::mat hessian, arma::vec lambdaHat, arma::vec exponent, arma::cube dgdt){
   using std::pow; using std::log;
   int n = g.n_rows;
   int d = g.n_cols;
+  int p = dgdt.n_cols;
 
 
-  arma::mat dh2dtlam(d, d, arma::fill::zeros);
+  arma::mat dh2dtlam(d, p, arma::fill::zeros);
   for(int i = 0; i < n; ++i){
     dh2dtlam += 1.0 / n * (exponent(i) * (dgdt.slice(i) + g.row(i).t() * lambdaHat.t() * dgdt.slice(i)));
   }
 
   arma::mat dlamdt = - hessian.i() * dh2dtlam;
-  arma::mat productRule(d, n, arma::fill::zeros);
+  arma::mat productRule(p, n, arma::fill::zeros);
   for(int i = 0; i < n; ++i){
     productRule.col(i) = dlamdt.t() * g.row(i).t() + dgdt.slice(i).t() * lambdaHat;
   }
 
-  arma::vec dpdt(d, arma::fill::zeros);
-  for(int j = 0; j < d; ++j){
+  arma::vec dpdt(p, arma::fill::zeros);
+  for(int j = 0; j < p; ++j){
     dpdt(j) = sum(productRule.row(j)) - n / sum(exponent) * as_scalar(productRule.row(j) * exponent);
   }
   double logp = sum(log(exponent)) - n * log(sum(exponent));

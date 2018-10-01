@@ -3,7 +3,8 @@ Title: Various functions to implement VB
 Version: 1.0
 Date: 2018-09-27
 Authors@R: person("Nathaniel", "Tomasetti", email = "nathaniel.tomasetti@monash.edu", role = c("aut", "cre"))
-Description: Provides functions for reparameterised VB with mixture gaussian approximations, Stein VB, and a Metropolis Hastings sampler. Generally relies on user provided gradient functions as inputs. 
+Description: Provides functions for reparameterised VB with mixture approximations, Stein VB, and a Metropolis Hastings sampler as well as some auxiliary functions.
+VB and Metropolis Hastings relies on user provided model functions that calculate and/or differentiate the log joint density. 
 Depends: R (>= 3.4.4)
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.18), RcppArmadillo, RcppEigen, rstan

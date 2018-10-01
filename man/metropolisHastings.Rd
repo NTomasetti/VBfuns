@@ -2,7 +2,7 @@
 % Please edit documentation in R/metropolisHastings.R
 \name{metropolisHastings}
 \alias{metropolisHastings}
-\title{Block Random Walk Metrolpolis Hastings Sample}
+\title{Block Random Walk Metrolpolis Hastings Sampler}
 \usage{
 metropolisHastings(start, iter, model, targetAcceptance = 0.234,
   burnIn = 0, thin = 1, stepsize = 0.01, ...)

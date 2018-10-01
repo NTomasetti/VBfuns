@@ -1,4 +1,4 @@
-#' Block Random Walk Metrolpolis Hastings Sample
+#' Block Random Walk Metrolpolis Hastings Sampler
 #'
 #' Jointly samples a candidate from a Random Walk Metrolpolis Hastings algorithm with a given acceptance rate to be targeted.
 #' @param start A vector of starting values for the parameters. If a named vector is inputted, the names will be attached to the output
@@ -45,7 +45,7 @@ metropolisHastings <- function(start, iter, model, targetAcceptance = 0.234, bur
       if(mins > 180){
         print(paste0('Iteration: ', i, '. Est. Time Remaining: ', round(mins / 60, 2), ' hours.'))
       } else if(mins > 1){
-        print(paste0('Iteration: ', i, '. Est. Time Remaining: ', round(mins, 2), ' minutes.'))
+        print(paste0('Iteration: ', i, '. Est. Time Remaining: ', round(mins, 1), ' minutes.'))
       } else {
         print(paste0('Iteration: ', i, '. Est. Time Remaining: ', ceiling(mins * 60), ' seconds.'))
       }
