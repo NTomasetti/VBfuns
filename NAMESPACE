@@ -2,8 +2,8 @@
 
 export(fitISUVB)
 export(gaussianDensity)
-export(gaussianVB)
 export(metropolisHastings)
+export(reparamVB)
 export(steinVB)
 export(vbetelMatrixCalculations)
 importFrom(Rcpp,sourceCpp)
