@@ -24,7 +24,7 @@ Rcpp::List vbetelMatrixCalculations(arma::mat g, arma::mat hessian, arma::vec la
 
   arma::mat dh2dtlam(d, p, arma::fill::zeros);
   for(int i = 0; i < n; ++i){
-    dh2dtlam += 1.0 / n * (exponent(i) * (dgdt.slice(i) + g.row(i).t() * lambdaHat.t() * dgdt.slice(i)));
+    dh2dtlam += exponent(i) / n * (dgdt.slice(i) + g.row(i).t() * lambdaHat.t() * dgdt.slice(i));
   }
 
   arma::mat dlamdt = - hessian.i() * dh2dtlam;
@@ -33,10 +33,8 @@ Rcpp::List vbetelMatrixCalculations(arma::mat g, arma::mat hessian, arma::vec la
     productRule.col(i) = dlamdt.t() * g.row(i).t() + dgdt.slice(i).t() * lambdaHat;
   }
 
-  arma::vec dpdt(p, arma::fill::zeros);
-  for(int j = 0; j < p; ++j){
-    dpdt(j) = sum(productRule.row(j)) - n / sum(exponent) * as_scalar(productRule.row(j) * exponent);
-  }
+  arma::vec dpdt = sum(productRule, 1) - n / sum(exponent) * productRule * exponent;
+  
   double logp = sum(log(exponent)) - n * log(sum(exponent));
   return Rcpp::List::create(Rcpp::Named("grad") = dpdt,
                             Rcpp::Named("val") = logp);

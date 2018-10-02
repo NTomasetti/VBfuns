@@ -33,7 +33,6 @@ struct RBF {
     int N = y.n_elem;
 
     T kernel = 0;
-
     for(int i = 0; i < N; ++i){
       kernel += pow(x(i) - y(i), 2);
     }
